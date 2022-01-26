@@ -21,7 +21,7 @@ public class Movement : MonoBehaviour
     {
         float xDirection = Input.GetAxisRaw("Horizontal");
         anim.SetFloat("Speed",Mathf.Abs(xDirection));
-        //rb.velocity = transform.position(speed * xDirection, rb.velocity.y);
+        rb.velocity = new Vector2(speed * xDirection, rb.velocity.y);
 
         if (xDirection < 0)
         {
