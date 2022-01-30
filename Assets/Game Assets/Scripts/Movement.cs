@@ -14,7 +14,7 @@ public class Movement : MonoBehaviour
     private BoxCollider2D coll;
     [SerializeField] private LayerMask jumpableground;
     [SerializeField] private Rigidbody2D rb;
-    public float speed = 5f;
+    public float speed = 6f;
    
     public float jumpforce = 5f;
    
@@ -37,10 +37,27 @@ void Start()
         float xDirection = Input.GetAxisRaw("Horizontal");
         float yDirection = Input.GetAxisRaw("Vertical");
 
-        anim.SetFloat("Speed",Mathf.Abs(xDirection));
-        
-        rb.velocity = new Vector2(speed * xDirection, rb.velocity.y);
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            speed = 3f;
 
+
+        }
+        else
+        {
+            speed = 6f;
+
+            anim.SetFloat("Speed", Mathf.Abs(xDirection));
+            rb.velocity = new Vector2(speed * xDirection, rb.velocity.y);
+        }
+
+        if (speed == 3f)
+        {
+            anim.SetBool("Walk", true);
+            rb.velocity = new Vector2(speed * xDirection, rb.velocity.y);
+
+        }
+        else { anim.SetBool("Walk", false); }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -92,6 +109,20 @@ void Start()
         boxCollider2D.size = StandingSize;
 
     }
+
+   /*private void Stopwalk()
+    
+    {
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            anim.SetBool("Walk", false);
+        
+        
+        }
+        
+    
+    
+    }*/
 
 
 
