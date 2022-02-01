@@ -849,7 +849,7 @@ MonoBehaviour:
   boxCollider2D: {fileID: 903721769}
   StandingSize: {x: 0, y: 0}
   crouchingsize: {x: 0.33727, y: 1.013444}
-  jumpableground:
+  platformLayerMask:
     serializedVersion: 2
     m_Bits: 256
   rb: {fileID: 903721773}

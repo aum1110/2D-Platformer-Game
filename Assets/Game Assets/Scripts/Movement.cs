@@ -12,7 +12,7 @@ public class Movement : MonoBehaviour
     public Vector2 StandingSize;
     public Vector2 crouchingsize;
     private BoxCollider2D coll;
-    [SerializeField] private LayerMask jumpableground;
+    [SerializeField] private LayerMask platformLayerMask;
     [SerializeField] private Rigidbody2D rb;
     public float speed = 6f;
    
@@ -34,9 +34,10 @@ void Start()
     void Update()
     {
 
-        float xDirection = Input.GetAxisRaw("Horizontal");
-        float yDirection = Input.GetAxisRaw("Vertical");
+        float xDirection = Input.GetAxisRaw("Horizontal");  /* Movement Inputs */
+        float yDirection = Input.GetAxisRaw("Vertical");    
 
+        /* Walk Input */
         if (Input.GetKey(KeyCode.LeftShift))
         {
             speed = 3f;
@@ -59,17 +60,18 @@ void Start()
         }
         else { anim.SetBool("Walk", false); }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        /*----------Jump ---------*/
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
 
 
-            Debug.Log("Jump"); 
+          
             rb.velocity = Vector2.up * jumpforce;
             anim.SetBool("jump", true);
 
         }
       
-
+        /*To Flip the Spirte in the Direction*/
        if (xDirection < 0)
         {
             sr.flipX = true;
@@ -80,7 +82,7 @@ void Start()
         
         }
       
-
+       /*------ Crouch ------*/
         if (Input.GetKey(KeyCode.LeftControl))
             {
             anim.SetBool("Crouch",true);
@@ -94,7 +96,13 @@ void Start()
        
         
     }
-
+    /*-------Method To check if player is on Ground------*/
+    private bool IsGrounded()
+    {
+        float extraheight = 1f;
+        RaycastHit2D raycastHit2D = Physics2D.BoxCast(boxCollider2D.bounds.center , boxCollider2D.bounds.size,0f,Vector2.down , extraheight , platformLayerMask);
+        return raycastHit2D.collider != null;
+    }
     private void Nojump()
         {
 
