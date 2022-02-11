@@ -4,24 +4,26 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    public Animator anim;
-    private SpriteRenderer sr;
-    public Sprite Standing;
-    public Sprite crouch;
-    public BoxCollider2D boxCollider2D;
-    public Vector2 StandingSize;
-    public Vector2 crouchingsize;
-    private BoxCollider2D coll;
-    [SerializeField] private LayerMask platformLayerMask;
-    [SerializeField] private Rigidbody2D rb;
-    public float speed = 6f;
-   
-    public float jumpforce = 5f;
+    public Animator anim; // Animator Variable
+    private SpriteRenderer sr;  // Spriterender VAriable
+
+    public Sprite Standing; // Crouch Standing Sprite
+    public Sprite crouch; // Crouch Crouched Sprite
+    public BoxCollider2D boxCollider2D; // BoxCollider Reference
+    public Vector2 StandingSize; // VEctor Size of Collider of standing pos.
+    public Vector2 crouchingsize; // VEctor Size of Collider of Crouching pos.
+    private BoxCollider2D coll; // Collider refrence 
+    [SerializeField] private LayerMask platformLayerMask; // Ground LAyer Mask
+    [SerializeField] private Rigidbody2D rb; // Rigidbody Refrence
+    [SerializeField] private float speed = 6f; // Speed Variable
+    bool CanDoubleJump; // Double JUmp bool 
+    [SerializeField] private float jumpforce = 5f; // Jummpforce VAriable
    
 
 
 void Start()
-    {
+    { 
+        // Refrences :-
         boxCollider2D = GetComponent<BoxCollider2D>();
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
@@ -34,45 +36,61 @@ void Start()
     void Update()
     {
 
-        float xDirection = Input.GetAxisRaw("Horizontal");  /* Movement Inputs */
-        float yDirection = Input.GetAxisRaw("Vertical");    
+        float xDirection = Input.GetAxisRaw("Horizontal");  /* Movement Inputs */ // Horizontal Way
+        float yDirection = Input.GetAxisRaw("Vertical"); // VErtical Movment Inputs
 
         /* Walk Input */
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift)) 
         {
             speed = 3f;
 
 
+
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            speed = 6f;
+            anim.SetBool("Walk", false);
+        
+        
         }
         else
         {
             speed = 6f;
 
-            anim.SetFloat("Speed", Mathf.Abs(xDirection));
-            rb.velocity = new Vector2(speed * xDirection, rb.velocity.y);
+            if (IsGrounded())
+            {
+                anim.SetFloat("Speed", Mathf.Abs(xDirection));
+                rb.velocity = new Vector2(speed * xDirection, rb.velocity.y);
+            }
+           
         }
 
         if (speed == 3f)
         {
             anim.SetBool("Walk", true);
             rb.velocity = new Vector2(speed * xDirection, rb.velocity.y);
-
+           
         }
-        else { anim.SetBool("Walk", false); }
+        // else { anim.SetBool("Walk", false); }
 
         /*----------Jump ---------*/
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
-
-
-          
-            rb.velocity = Vector2.up * jumpforce;
-            anim.SetBool("jump", true);
+            Jump();
+            CanDoubleJump = true;
 
         }
-      
+        else if (CanDoubleJump)
+        {
+            Jump();
+            CanDoubleJump = false;
+
+
+        }
+
         /*To Flip the Spirte in the Direction*/
-       if (xDirection < 0)
+        if (xDirection < 0)
         {
             sr.flipX = true;
         }
@@ -117,9 +135,14 @@ void Start()
         boxCollider2D.size = StandingSize;
 
     }
+    private void Jump()
+    {
+        rb.velocity = Vector2.up * jumpforce;
+        anim.SetBool("jump", true);
 
-   /*private void Stopwalk()
-    
+
+    }
+  /* private void Stopwalk()
     {
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
@@ -130,8 +153,8 @@ void Start()
         
     
     
-    }*/
+    }
 
-
+    */
 
 }
