@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Movement : MonoBehaviour
 {
     public Animator anim; // Animator Variable
     private SpriteRenderer sr;  // Spriterender VAriable
-
     public Sprite Standing; // Crouch Standing Sprite
     public Sprite crouch; // Crouch Crouched Sprite
     public BoxCollider2D boxCollider2D; // BoxCollider Reference
@@ -36,6 +36,13 @@ void Start()
     void Update()
     {
 
+        if (transform.position.y < -2.5)
+        {
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+
+        }
         float xDirection = Input.GetAxisRaw("Horizontal");  /* Movement Inputs */ // Horizontal Way
         float yDirection = Input.GetAxisRaw("Vertical"); // VErtical Movment Inputs
 
